@@ -28,14 +28,14 @@ public class TicketController {
         return new ResponseEntity<>(serviceResponse, HttpStatus.CREATED);
     }
 
-    @PostMapping("/actualizar-estado/{id}/{estadoId}")
-    public ResponseEntity<ServiceResponse> actualizarEstado(@PathVariable Long id, @PathVariable Long estadoId) {
+    @PostMapping("/actualizar-estado")
+    public ResponseEntity<ServiceResponse> actualizarEstado(@RequestBody Ticket ticket) {
         ServiceResponse serviceResponse = new ServiceResponse();
-        int result = iTicketService.actualizarEstado(id, estadoId);
-        if (result == 1) {
-            serviceResponse.setMessage("Estado del ticket actualizado exitosamente");
+        int result = iTicketService.actualizarEstado(ticket);
+        if (result == 1){
+            serviceResponse.setMessage("Estado de ticket actualizado exitosamente");
         }
-        return new ResponseEntity<>(serviceResponse, HttpStatus.OK);
+        return new ResponseEntity<>(serviceResponse, HttpStatus.CREATED);
     }
 
     @PostMapping("/marcar-resuelto")
@@ -49,12 +49,17 @@ public class TicketController {
     }
     
     
+    @GetMapping("/ticketbyid/{id}")
+    public ResponseEntity<List<Ticket>> obtenerPorId(@PathVariable Long id) {
+        var result = iTicketService.obtenerPorId (id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @GetMapping("/list")
     public ResponseEntity<List<Ticket>> obtenerTodos() {
         var result = iTicketService.obtenerTodos();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
     @GetMapping("/no-resueltos-30-dias")
     public ResponseEntity<List<Ticket>> obtenerNoResueltos30Dias() {
         var result = iTicketService.obtenerNoResueltos30Dias();

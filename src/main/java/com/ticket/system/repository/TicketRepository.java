@@ -18,7 +18,7 @@ public class TicketRepository implements ITicketRepository{
 
     @Override
     public int crear(Ticket ticket) {
-        String sql = "INSERT INTO Tickets (titulo, descripcion) VALUES (?, ?)";
+        String sql = "INSERT INTO Tickets (titulo, descripcion, fechaCreacion) VALUES (?, ?, GETDATE())";
         return jdbcTemplate.update(sql, new Object[]{
             ticket.getTitulo(),
             ticket.getDescripcion()
@@ -38,17 +38,19 @@ public class TicketRepository implements ITicketRepository{
     }
 
     @Override
-    public int actualizarEstado(Long id, Long estadoId) {
-        String sql = "UPDATE Tickets SET estadoId = ?, fechaActualizacion = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, estadoId, LocalDateTime.now(), id);
+    public int actualizarEstado(Ticket ticket) {
+        String sql = "UPDATE Tickets SET estadoId = ?, fechaActualizacion = GETDATE() WHERE id = ?";
+        return jdbcTemplate.update(sql,
+                ticket.getEstadoId(),
+                ticket.getId()
+        );
     }
 
     @Override
     public int marcarComoResuelto(Ticket ticket) {
-        String sql = "UPDATE Tickets SET estadoId = 4, comentario = ?, fechaActualizacion = ? WHERE id = ?";
+        String sql = "UPDATE Tickets SET estadoId = 4, comentario = ?, fechaActualizacion = GETDATE() WHERE id = ?";
         return jdbcTemplate.update(sql,
                 ticket.getComentario(),
-                LocalDateTime.now(),
                 ticket.getId()
         );
     }

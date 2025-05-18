@@ -47,12 +47,12 @@ public class TicketService implements ITicketService{
     }
 
     @Override
-    public int actualizarEstado(Long id, Long estadoId) {
+    public int actualizarEstado(Ticket ticket) {
         int row;
         try {
-            row = iTicketRepository.actualizarEstado(id, estadoId);
+            row = iTicketRepository.actualizarEstado(ticket);
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw ex;
         }
         return row;
     }

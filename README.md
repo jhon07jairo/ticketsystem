@@ -1,14 +1,49 @@
-# Running the Ticket System Application Without Docker
+# Ticket System Application
 
-This guide provides instructions on how to run the Ticket System application without Docker, using a local SQL Server instance with Windows authentication.
+This guide provides instructions on how to run the Ticket System application both with and without Docker.
 
-## Prerequisites
+## Running with Docker (Recommended)
+
+### Prerequisites
+
+1. **Docker**: Make sure you have Docker and Docker Compose installed on your system.
+
+### Running the Application
+
+1. Clone the repository:
+   ```
+   git clone https://github.com/jhon07jairo/ticketsystem.git
+   cd ticketsystem
+   ```
+
+2. Build and start the containers:
+   ```
+   docker-compose up -d
+   ```
+
+3. The application will be available at http://localhost:9000
+
+### Stopping the Application
+
+To stop the application:
+```
+docker-compose down
+```
+
+To stop the application and remove all data:
+```
+docker-compose down -v
+```
+
+## Running without Docker
+
+### Prerequisites
 
 1. **Java 17**: Make sure you have Java 17 installed on your system.
 2. **Maven**: Make sure you have Maven installed on your system.
 3. **SQL Server**: Make sure you have SQL Server installed locally on your system.
 
-## Database Setup
+### Database Setup
 
 1. Open SQL Server Management Studio (SSMS) and connect to your local SQL Server instance.
 2. Create a new database named `TicketDB`:
@@ -16,34 +51,22 @@ This guide provides instructions on how to run the Ticket System application wit
    CREATE DATABASE TicketDB;
    GO
    ```
-3. Create the Tickets table:
-   ```sql
-   USE TicketDB;
-   GO
-   
-   CREATE TABLE Tickets (
-       Id BIGINT IDENTITY(1,1) PRIMARY KEY,
-       Titulo NVARCHAR(255) NOT NULL,
-       Descripcion NVARCHAR(MAX),
-       Estado NVARCHAR(50) NOT NULL,
-       FechaCreacion DATETIME2 NOT NULL,
-       FechaActualizacion DATETIME2,
-       FechaVencimiento DATETIME2,
-       Comentario NVARCHAR(MAX)
-   );
-   GO
-   ```
+3. Run the initialization script from `init-db.sql` to create the necessary tables and views.
 
-## Application Configuration
+### Application Configuration
 
-The application is already configured to use Windows authentication to connect to a local SQL Server instance. The configuration is in the `application.properties` file:
+The application is configured to connect to a SQL Server instance. The configuration is in the `application.properties` file:
 
 ```properties
-spring.datasource.url=jdbc:sqlserver://localhost:1433;databaseName=TicketDB;integratedSecurity=true;encrypt=false;trustServerCertificate=true
+spring.datasource.url=jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=TicketDB;encrypt=false;trustServerCertificate=true
 spring.datasource.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver
+spring.datasource.username=sa
+spring.datasource.password=12345
 ```
 
-## Running the Application
+Update these values as needed for your environment.
+
+### Running the Application
 
 1. Open a command prompt or PowerShell window.
 2. Navigate to the project directory:
@@ -64,26 +87,27 @@ spring.datasource.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver
 
 The application provides the following API endpoints:
 
-- `GET /api/tickets`: Get all tickets
-- `GET /api/tickets/{id}`: Get a ticket by ID
-- `POST /api/tickets`: Create a new ticket
-- `PUT /api/tickets/{id}/estado`: Update the status of a ticket
-- `PUT /api/tickets/{id}/resolver`: Mark a ticket as resolved
+- `GET /api/tickets/list`: Get all tickets
+- `POST /api/tickets/crear`: Create a new ticket
+- `POST /api/tickets/actualizar-estado`: Update the status of a ticket
+- `POST /api/tickets/marcar-resuelto`: Mark a ticket as resolved
+- `GET /api/tickets/no-resueltos-30-dias`: Get tickets not resolved in 30 days
 
-## Troubleshooting
+## Running Tests
 
-### Windows Authentication Issues
+To run the tests:
+```
+mvn test
+```
 
-If you encounter issues with Windows authentication, make sure:
+## Project Structure
 
-1. The SQL Server instance is configured to allow Windows authentication.
-2. The Windows user running the application has the necessary permissions on the SQL Server instance and the `TicketDB` database.
-3. The SQL Server JDBC driver is properly loaded. The driver is included as a dependency in the project's pom.xml.
-
-### Connection Issues
-
-If you encounter connection issues:
-
-1. Verify that the SQL Server instance is running on the default port (1433).
-2. If SQL Server is running on a different port, update the `spring.datasource.url` property in the `application.properties` file.
-3. Make sure the firewall is not blocking connections to SQL Server.
+- `src/main/java/com/ticket/system`: Java source code
+  - `controller`: REST controllers
+  - `model`: Data models
+  - `repository`: Data access layer
+  - `service`: Business logic
+- `src/test`: Test code
+- `Dockerfile`: Docker configuration for the application
+- `docker-compose.yml`: Docker Compose configuration
+- `init-db.sql`: Database initialization script
