@@ -1,0 +1,175 @@
+{
+  "v": 7,
+  "name": "Endpoints api springboot tickets",
+  "folders": [],
+  "requests": [
+    {
+      "v": "12",
+      "name": "Todos los tickets",
+      "method": "GET",
+      "endpoint": "http://localhost:9000/api/tickets/list",
+      "params": [],
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": ""
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "12",
+      "name": "Ticket by id",
+      "method": "GET",
+      "endpoint": "http://localhost:9000/api/tickets/ticketbyid/54",
+      "params": [],
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": ""
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "12",
+      "name": "No resueltos",
+      "method": "GET",
+      "endpoint": "http://localhost:9000/api/tickets/no-resueltos-30-dias",
+      "params": [],
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": ""
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "12",
+      "name": "Crear ticket",
+      "method": "POST",
+      "endpoint": "http://localhost:9000/api/tickets/crear",
+      "params": [],
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n    \"titulo\": \"Ticket creación 3\",\n    \"descripcion\": \"Ticket creación 3 descripción\"\n}\n"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "12",
+      "name": "Editar estado ticket",
+      "method": "POST",
+      "endpoint": "http://localhost:9000/api/tickets/actualizar-estado",
+      "params": [],
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"id\": 54,\n  \"estadoId\": 2\n}"
+      },
+      "requestVariables": [],
+      "responses": {}
+    },
+    {
+      "v": "12",
+      "name": "Marcar resuelto",
+      "method": "POST",
+      "endpoint": "http://localhost:9000/api/tickets/marcar-resuelto",
+      "params": [],
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "active": true,
+          "description": ""
+        }
+      ],
+      "preRequestScript": "",
+      "testScript": "",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"id\": 54,\n  \"comentario\": \"Ticket 54 resuelto satisfactoriamente\"\n}"
+      },
+      "requestVariables": [],
+      "responses": {}
+    }
+  ],
+  "headers": [],
+  "auth": {
+    "authType": "none",
+    "authActive": true
+  },
+  "_ref_id": "coll_maudvcvl_78d61d0d-49ff-4771-8341-a2590c2fec17"
+}
