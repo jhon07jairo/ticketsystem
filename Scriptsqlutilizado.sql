@@ -22,19 +22,42 @@ GO
 CREATE TABLE TicketsNoResueltosLog (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     TicketId INT NOT NULL,
-    FechaRegistro DATETIME NOT NULL DEFAULT GETDATE(),
-    FOREIGN KEY (TicketId) REFERENCES Tickets(Id)
+    Titulo NVARCHAR(255) NOT NULL,
+    Descripcion NVARCHAR(MAX) NOT NULL,
+    FechaCreacion DATETIME NOT NULL,
+    FechaActualizacion DATETIME NULL,
+    FechaVencimiento DATETIME NULL,
+    Comentario NVARCHAR(MAX) NULL,
+    EstadoId INT NOT NULL
 );
 GO
+
 
 -- Procedimiento almacenado para guardar tickets no resueltos mayores a 30 días
 CREATE OR ALTER PROCEDURE RegistrarTicketsNoResueltos
 AS
 BEGIN
-    INSERT INTO TicketsNoResueltosLog (TicketId)
-    SELECT Id
+    INSERT INTO TicketsNoResueltosLog (
+        TicketId,
+        Titulo,
+        Descripcion,
+        FechaCreacion,
+        FechaActualizacion,
+        FechaVencimiento,
+        Comentario,
+        EstadoId
+    )
+    SELECT
+        Id,
+        Titulo,
+        Descripcion,
+        FechaCreacion,
+        FechaActualizacion,
+        FechaVencimiento,
+        Comentario,
+        EstadoId
     FROM Tickets
-    WHERE EstadoId != 4  -- Usar EstadoId diferente de 4
+    WHERE EstadoId != 4  -- Estado distinto de "Resuelto"
       AND DATEDIFF(DAY, FechaCreacion, GETDATE()) > 30;
 END;
 GO
@@ -96,3 +119,16 @@ ADD CONSTRAINT DF_FechaVencimiento DEFAULT DATEADD(week, 1, GETDATE()) FOR Fecha
 GO
 
 UPDATE Tickets SET estadoId = 4, comentario = 'Comentario resuelto' , fechaActualizacion = GETDATE() WHERE id = 52;
+
+INSERT INTO Tickets (Titulo, Descripcion, EstadoId, FechaCreacion, FechaActualizacion, Comentario)
+VALUES
+('Error en autenticación SSO', 'Los usuarios no pueden iniciar sesión a través de inicio de sesión único desde hace más de un mes.', 1, DATEADD(DAY, -40, GETDATE()), NULL, NULL),
+
+('Fallo en el envío de correos automáticos', 'Desde hace 35 días, el sistema no envía notificaciones por correo electrónico para eventos críticos.', 2, DATEADD(DAY, -35, GETDATE()), NULL, NULL),
+
+('Problemas con la carga de archivos', 'Varios usuarios reportan errores intermitentes al subir archivos en el portal de clientes.', 3, DATEADD(DAY, -45, GETDATE()), NULL, NULL),
+
+('Dashboard no carga correctamente', 'El dashboard principal no muestra datos desde hace dos meses. Problema sin resolver.', 1, DATEADD(DAY, -60, GETDATE()), NULL, NULL),
+
+('Error al generar reportes PDF', 'Los reportes financieros en formato PDF no se generan desde hace más de 30 días.', 2, DATEADD(DAY, -31, GETDATE()), NULL, NULL);
+GO
